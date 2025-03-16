@@ -1,6 +1,20 @@
 import mongoose from "mongoose";
 
+interface IUser {
+    handle: string;
+    name: string;
+    email: string;
+    password: string;
+}
+
 const userSchema = new mongoose.Schema({ // schema es como la forma en la que se va a guardar el usuario
+    handle: {
+        type: String,
+        required: true,
+        trim: true,
+        unique: true,
+        lowercase: true
+    },
     name: {
         type: String,
         required: true,
@@ -10,7 +24,8 @@ const userSchema = new mongoose.Schema({ // schema es como la forma en la que se
         type: String,
         required: true,
         unique: true,
-        trim: true
+        trim: true,
+        lowercase: true
     },
     password: {
         type: String,
@@ -19,6 +34,6 @@ const userSchema = new mongoose.Schema({ // schema es como la forma en la que se
     }
 })
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model<IUser>('User', userSchema);
 
 export default User;

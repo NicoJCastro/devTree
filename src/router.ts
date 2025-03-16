@@ -1,12 +1,15 @@
-import {Router} from 'express';
+import { Router, RequestHandler } from 'express';
+import { body } from 'express-validator';
+import { createAccount } from './handlers';
 
 const router = Router();
 
 //Routing
-// Ejemplo de Autenticación y registro
-router.post('/auth/register', (req, res) => {
-    console.log(req.body);
+// ********** Autenticación y registro **********
+router.post('/auth/register',
+    body('handle').notEmpty(),
     
-});
+    
+    createAccount as RequestHandler);
 
 export default router;
