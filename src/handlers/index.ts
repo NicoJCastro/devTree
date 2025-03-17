@@ -2,7 +2,7 @@ import User from '../models/User';
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import slug from 'slug';
-import { hashPassword } from '../utils/auth';
+import { hashPassword, comparePassword } from '../utils/auth';
 
 export const createAccount = async(req: Request, res: Response): Promise<void> => {
 
@@ -40,4 +40,32 @@ export const createAccount = async(req: Request, res: Response): Promise<void> =
         message: 'Usuario creado correctamente',
         user
     });
+}
+
+export const login = async(req: Request, res: Response): Promise<void> => {
+
+    let errors = validationResult(req)
+    if(!errors.isEmpty()){
+        res.status(400).json({errors: errors.array()})
+        return
+    }
+
+    const {email, password} = req.body
+    const user = await User.findOne({email})
+    if(!user){
+       const error = new Error('No existe un usuario con ese email')
+       res.status(404).json({error: error.message})
+       return
+    }
+
+    const isMatch = await comparePassword(password, user.password)
+    if(!isMatch){
+        const error = new Error('La contraseña es incorrecta')
+        res.status(401).json({error: error.message})
+        return
+    }
+
+    console.log("Iniciaste sesión correctamente")
+
+    
 }
