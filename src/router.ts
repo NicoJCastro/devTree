@@ -1,7 +1,7 @@
 import { Router, RequestHandler } from 'express';
 import { body } from 'express-validator';
 import { createAccount, login } from './handlers';
-
+import { handleInputErrors } from './middleware/validation';
 const router = Router();
 
 //Routing
@@ -16,13 +16,15 @@ router.post('/auth/register',
     body('password').isLength({min: 8}).withMessage('La contraseña debe tener al menos 8 caracteres'),
     body('password')
         .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
-        .withMessage('La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un símbolo'),    
+        .withMessage('La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un número y un símbolo'),
+    handleInputErrors,
     createAccount as RequestHandler);
 
 router.post('/auth/login',
     body('email').notEmpty().withMessage('El email no puede ir vacío'),
     body('email').isEmail().withMessage('Email inválido'),
     body('password').notEmpty().withMessage('La contraseña no puede ir vacía'),    
+    handleInputErrors,
     login as RequestHandler);
 
 export default router;

@@ -5,14 +5,6 @@ import slug from 'slug';
 import { hashPassword, comparePassword } from '../utils/auth';
 
 export const createAccount = async(req: Request, res: Response): Promise<void> => {
-
-    //Manejo de errores
-    let errors = validationResult(req)
-    if(!errors.isEmpty()){
-        res.status(400).json({errors: errors.array()})
-        return
-    }
-
     const {email, password} = req.body
 
     const userExist = await User.findOne({email})
@@ -42,13 +34,7 @@ export const createAccount = async(req: Request, res: Response): Promise<void> =
     });
 }
 
-export const login = async(req: Request, res: Response): Promise<void> => {
-
-    let errors = validationResult(req)
-    if(!errors.isEmpty()){
-        res.status(400).json({errors: errors.array()})
-        return
-    }
+export const login = async(req: Request, res: Response): Promise<void> => {  
 
     const {email, password} = req.body
     const user = await User.findOne({email})
@@ -65,7 +51,7 @@ export const login = async(req: Request, res: Response): Promise<void> => {
         return
     }
 
-    console.log("Iniciaste sesión correctamente")
+    res.send("Iniciaste sesión correctamente")
 
     
 }
