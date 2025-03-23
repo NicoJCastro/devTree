@@ -29,8 +29,7 @@ export const createAccount = async(req: Request, res: Response): Promise<void> =
     
     await user.save();
     res.status(201).json({
-        message: 'Usuario creado correctamente',
-        user
+        message: 'Usuario creado correctamente'
     });
 }
 
